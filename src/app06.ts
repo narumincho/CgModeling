@@ -24,6 +24,7 @@ const octahedron = new THREE.Mesh(
     new THREE.OctahedronGeometry(),
     new THREE.MeshNormalMaterial()
 );
+
 octahedron.scale.copy(new THREE.Vector3(2, 2, 2));
 scene.add(octahedron);
 
