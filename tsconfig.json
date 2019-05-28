@@ -3,10 +3,7 @@
         "target": "es2019",
         "module": "es2015",
         "strict": true,
-        "lib": [
-            "es2019",
-            "dom"
-        ],
+        "lib": ["es2019", "dom"],
         "moduleResolution": "node",
         "removeComments": true,
         "sourceMap": true
