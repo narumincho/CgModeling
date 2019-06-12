@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { GUI } from "dat.gui";
 import "three/examples/js/controls/orbitControls";
+import { VertexColors } from "three";
 
 /**
  * @author 17FI082 鳴海秀人
@@ -23,13 +24,15 @@ scene.add(new THREE.AxesHelper(25));
 
 const option = {
     num: 29,
-    transparent: false,
-    opacity: 0
+    gravity: 0.9
 };
 
-const createCloud = (num: number): THREE.Points => {
+const createCloud = (
+    num: number
+): { points: THREE.Points; velocityList: Array<THREE.Vector3> } => {
     const geometry = new THREE.Geometry();
     const side = num ** (1 / 3);
+    const velocityList: Array<THREE.Vector3> = [];
     for (let x = 0; x < side; x++) {
         for (let y = 0; y < side; y++) {
             for (let z = 0; z < side; z++) {
@@ -43,18 +46,28 @@ const createCloud = (num: number): THREE.Points => {
                 geometry.colors.push(
                     new THREE.Color(0xff0000 + Math.random() * 0x00ffff)
                 );
+                velocityList.push(
+                    new THREE.Vector3(
+                        Math.random(),
+                        Math.random(),
+                        Math.random()
+                    )
+                );
             }
         }
     }
-    return new THREE.Points(
-        geometry,
-        new THREE.PointsMaterial({
-            size: 4,
-            map: makeStarTexture(),
-            blending: THREE.AdditiveBlending,
-            vertexColors: THREE.VertexColors
-        })
-    );
+    return {
+        points: new THREE.Points(
+            geometry,
+            new THREE.PointsMaterial({
+                size: 4,
+                map: makeStarTexture(),
+                blending: THREE.AdditiveBlending,
+                vertexColors: THREE.VertexColors
+            })
+        ),
+        velocityList: velocityList
+    };
 };
 
 /**
@@ -107,21 +120,16 @@ const drawStar = (
     context.fill();
 };
 
-let cloud: THREE.Points = createCloud(option.num);
-scene.add(cloud);
+let cloudData = createCloud(option.num);
+scene.add(cloudData.points);
 const gui = new GUI();
 gui.domElement.style.position = "absolute";
 gui.add(option, "num", 9, 10000).onChange(() => {
-    scene.remove(cloud);
-    cloud = createCloud(option.num);
-    scene.add(cloud);
+    scene.remove(cloudData.points);
+    cloudData = createCloud(option.num);
+    scene.add(cloudData.points);
 });
-gui.add(option, "transparent").onChange(() => {
-    (cloud.material as THREE.Material).transparent = option.transparent;
-});
-gui.add(option, "opacity", 0, 1, 0.001).onChange(() => {
-    (cloud.material as THREE.Material).opacity = option.opacity;
-});
+gui.add(option, "gravity", 0, 2);
 
 const renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer({
     canvas: canvasElement
@@ -139,12 +147,28 @@ const camera = new THREE.PerspectiveCamera(
     0.1,
     100000
 );
-camera.position.set(20, 50, 40);
+camera.position.set(-20, 100, -40);
 camera.lookAt(new THREE.Vector3(0, 0, 0));
 
 const orbitControls = new THREE.OrbitControls(camera, canvasElement);
 
 const update = (): void => {
+    (cloudData.points.geometry as THREE.Geometry).vertices.map(
+        (position: THREE.Vector3, index: number) => {
+            const velocity = cloudData.velocityList[index];
+            velocity.add(
+                new THREE.Vector3(
+                    10 < position.x ? -0.01 : 0.01,
+                    10 < position.y ? -option.gravity : 0.02,
+                    10 < position.z ? -0.01 : 0.02
+                )
+            );
+            position.add(velocity);
+            return position;
+        }
+    );
+    (cloudData.points.geometry as THREE.Geometry).verticesNeedUpdate = true;
+
     orbitControls.update();
 
     renderer.setSize(
