@@ -97,7 +97,7 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.copy(new THREE.Vector3(0, 20, 30));
 camera.lookAt(new THREE.Vector3(0, 0, 0));
 
-const orbitControls = new THREE.OrbitControls(camera, canvasElement);
+const orbitControls = new (THREE as any).OrbitControls(camera, canvasElement);
 
 const mobiusStripRotateAxis = new THREE.Vector3(
     Math.random(),

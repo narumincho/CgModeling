@@ -371,7 +371,7 @@ const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
 camera.position.copy(new THREE.Vector3(-30, 20, 20));
 camera.lookAt(new THREE.Vector3(0, 0, 0));
 
-const orbitControls = new THREE.OrbitControls(camera, canvasElement);
+const orbitControls = new (THREE as any).OrbitControls(camera, canvasElement);
 
 const axis = {
     x: new THREE.Vector3(1, 0, 0),

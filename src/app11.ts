@@ -109,7 +109,7 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.set(20, 50, 40);
 camera.lookAt(new THREE.Vector3(0, 0, 0));
 
-const orbitControls = new THREE.OrbitControls(camera, canvasElement);
+const orbitControls = new (THREE as any).OrbitControls(camera, canvasElement);
 
 const update = (): void => {
     orbitControls.update();

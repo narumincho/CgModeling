@@ -74,7 +74,7 @@ const getMeshList = (): Array<THREE.Mesh> => {
     camera.position.copy(new THREE.Vector3(-30, 20, 20));
     camera.lookAt(new THREE.Vector3(0, 0, 0));
 
-    const orbitControls = new THREE.OrbitControls(camera, canvasElement);
+    const orbitControls = new (THREE as any).OrbitControls(camera, canvasElement);
 
     // 更新
     const update = () => {

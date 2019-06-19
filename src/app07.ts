@@ -49,7 +49,7 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.copy(new THREE.Vector3(0, 50, 40));
 camera.lookAt(new THREE.Vector3(0, 0, 0));
 
-const orbitControls = new THREE.OrbitControls(camera, canvasElement);
+const orbitControls = new (THREE as any).OrbitControls(camera, canvasElement);
 const material = new THREE.MeshNormalMaterial({ side: THREE.DoubleSide });
 const lineMaterial = new THREE.LineBasicMaterial({ color: 0xffffff });
 
