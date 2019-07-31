@@ -8,5 +8,5 @@
         "removeComments": true,
         "outDir": "dist"
     },
-    "files": ["src/app17.ts"]
+    "files": ["src/app-last.ts"]
 }
