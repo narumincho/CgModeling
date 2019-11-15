@@ -13,7 +13,7 @@
         "three": "^0.108.0"
     },
     "devDependencies": {
-        "@types/dat.gui": "^0.7.4",
+        "@types/dat.gui": "^0.7.5",
         "@types/stats": "^0.16.30",
         "@types/tween.js": "^17.2.0",
         "@types/physijs": "0.0.30",
