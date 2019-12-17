@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import "three/examples/js/controls/orbitControls";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import * as Physijs from "physijs-webpack";
 
 /**
@@ -29,14 +29,14 @@ dominoFirst.rotateZ(-0.2);
 scene.add(dominoFirst);
 
 for (let i = 0; i < 14; i++) {
-    const domino = new THREE.Mesh(new THREE.BoxGeometry(2, 50, 5));
-    domino.position.setX(i * 10 - 70);
-    domino.position.setY(30);
-    scene.add(domino);
+  const domino = new THREE.Mesh(new THREE.BoxGeometry(2, 50, 5));
+  domino.position.setX(i * 10 - 70);
+  domino.position.setY(30);
+  scene.add(domino);
 }
 scene.simulate();
 const renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer({
-    canvas: canvasElement
+  canvas: canvasElement
 });
 const canvasWidth = canvasElement.clientWidth;
 const canvasHeight = canvasElement.clientHeight;
@@ -46,31 +46,31 @@ renderer.shadowMap.enabled = true;
 
 // カメラの設定
 const camera = new THREE.PerspectiveCamera(
-    75,
-    canvasWidth / canvasHeight,
-    0.1,
-    100000
+  75,
+  canvasWidth / canvasHeight,
+  0.1,
+  100000
 );
 camera.position.set(120, 30, 60);
 camera.lookAt(new THREE.Vector3(0, 0, 0));
 
-const orbitControls = new (THREE as any).OrbitControls(camera, canvasElement);
+const orbitControls = new OrbitControls(camera, canvasElement);
 
 let count = 0;
 const update = (): void => {
-    count += 0.01;
-    orbitControls.update();
+  count += 0.01;
+  orbitControls.update();
 
-    renderer.setSize(
-        canvasElement.clientWidth,
-        canvasElement.clientHeight,
-        false
-    );
+  renderer.setSize(
+    canvasElement.clientWidth,
+    canvasElement.clientHeight,
+    false
+  );
 
-    camera.aspect = canvasElement.clientWidth / canvasElement.clientHeight;
-    camera.updateProjectionMatrix();
-    renderer.render(scene, camera);
+  camera.aspect = canvasElement.clientWidth / canvasElement.clientHeight;
+  camera.updateProjectionMatrix();
+  renderer.render(scene, camera);
 
-    requestAnimationFrame(update);
+  requestAnimationFrame(update);
 };
 update();

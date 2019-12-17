@@ -1,12 +1,12 @@
 {
-    "compilerOptions": {
-        "target": "es2019",
-        "module": "commonjs",
-        "strict": true,
-        "lib": ["es2019", "dom"],
-        "moduleResolution": "node",
-        "removeComments": true,
-        "outDir": "dist"
-    },
-    "files": ["src/app-last.ts"]
+  "compilerOptions": {
+    "target": "es2019",
+    "module": "commonjs",
+    "strict": true,
+    "lib": ["es2019", "dom"],
+    "moduleResolution": "node",
+    "removeComments": true,
+    "outDir": "dist"
+  },
+  "files": ["src/app-last.ts"]
 }

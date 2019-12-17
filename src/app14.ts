@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import "three/examples/js/controls/orbitControls";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 /**
  * @author 17FI082 鳴海秀人
@@ -21,15 +21,15 @@ document.body.append(canvasElement);
  * 星型のテクスチャを作る
  */
 const makeStarTexture = (): THREE.Texture => {
-    const sideLength = 256;
-    const canvas = document.createElement("canvas");
-    canvas.width = sideLength;
-    canvas.height = sideLength;
-    const context = canvas.getContext("2d") as CanvasRenderingContext2D;
-    drawStar(context, sideLength, 0xffffff);
-    const texture = new THREE.Texture(canvas);
-    texture.needsUpdate = true;
-    return texture;
+  const sideLength = 256;
+  const canvas = document.createElement("canvas");
+  canvas.width = sideLength;
+  canvas.height = sideLength;
+  const context = canvas.getContext("2d") as CanvasRenderingContext2D;
+  drawStar(context, sideLength, 0xffffff);
+  const texture = new THREE.Texture(canvas);
+  texture.needsUpdate = true;
+  return texture;
 };
 /**
  *
@@ -38,66 +38,66 @@ const makeStarTexture = (): THREE.Texture => {
  * @param color 塗りつぶしの色
  */
 const drawStar = (
-    context: CanvasRenderingContext2D,
-    sideLength: number,
-    color: number
+  context: CanvasRenderingContext2D,
+  sideLength: number,
+  color: number
 ): void => {
-    context.clearRect(0, 0, sideLength, sideLength);
+  context.clearRect(0, 0, sideLength, sideLength);
 
-    const radius = sideLength / 2 - 4;
-    context.beginPath();
-    context.lineWidth = 1;
-    context.strokeStyle = "#" + color.toString(16).padStart(6, "0");
-    context.fillStyle = "#" + color.toString(16).padStart(6, "0");
-    const starCount = 5;
-    for (let i = 0; i < starCount; i++) {
-        const angle = -Math.PI / 2 + (i * 2 * Math.PI) / starCount;
-        context.lineTo(
-            sideLength / 2 + Math.cos(angle) * radius,
-            sideLength / 2 + Math.sin(angle) * radius
-        );
-        const betweenAngle = angle + Math.PI / starCount;
-        context.lineTo(
-            sideLength / 2 + (Math.cos(betweenAngle) * radius) / 2,
-            sideLength / 2 + (Math.sin(betweenAngle) * radius) / 2
-        );
-    }
-    context.closePath();
-    context.stroke();
-    context.fill();
+  const radius = sideLength / 2 - 4;
+  context.beginPath();
+  context.lineWidth = 1;
+  context.strokeStyle = "#" + color.toString(16).padStart(6, "0");
+  context.fillStyle = "#" + color.toString(16).padStart(6, "0");
+  const starCount = 5;
+  for (let i = 0; i < starCount; i++) {
+    const angle = -Math.PI / 2 + (i * 2 * Math.PI) / starCount;
+    context.lineTo(
+      sideLength / 2 + Math.cos(angle) * radius,
+      sideLength / 2 + Math.sin(angle) * radius
+    );
+    const betweenAngle = angle + Math.PI / starCount;
+    context.lineTo(
+      sideLength / 2 + (Math.cos(betweenAngle) * radius) / 2,
+      sideLength / 2 + (Math.sin(betweenAngle) * radius) / 2
+    );
+  }
+  context.closePath();
+  context.stroke();
+  context.fill();
 };
 
 const scene: THREE.Scene = new THREE.Scene();
 scene.add(new THREE.AxesHelper(25));
 
 const makeTorus = (color: THREE.Color): THREE.Points =>
-    new THREE.Points(
-        new THREE.TorusGeometry(16, 2, 16, 16),
-        new THREE.PointsMaterial({
-            color: color,
-            size: 2,
-            map: makeStarTexture(),
-            transparent: true,
-            blending: THREE.AdditiveBlending,
-            depthWrite: false
-        })
-    );
+  new THREE.Points(
+    new THREE.TorusGeometry(16, 2, 16, 16),
+    new THREE.PointsMaterial({
+      color: color,
+      size: 2,
+      map: makeStarTexture(),
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
+    })
+  );
 const torusGroup = (() => {
-    const group = new THREE.Group();
-    group.add(makeTorus(new THREE.Color(0.8, 0.4, 0.4)));
-    group.add(makeTorus(new THREE.Color(0.4, 0.8, 0.4)));
-    group.add(makeTorus(new THREE.Color(0.4, 0.4, 0.8)));
-    return group;
+  const group = new THREE.Group();
+  group.add(makeTorus(new THREE.Color(0.8, 0.4, 0.4)));
+  group.add(makeTorus(new THREE.Color(0.4, 0.8, 0.4)));
+  group.add(makeTorus(new THREE.Color(0.4, 0.4, 0.8)));
+  return group;
 })();
 
 const torusGroupList: Array<THREE.Group> = new Array(5).fill(0).map(() => {
-    const group = torusGroup.clone();
-    scene.add(group);
-    return group;
+  const group = torusGroup.clone();
+  scene.add(group);
+  return group;
 });
 
 const renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer({
-    canvas: canvasElement
+  canvas: canvasElement
 });
 const canvasWidth = canvasElement.clientWidth;
 const canvasHeight = canvasElement.clientHeight;
@@ -107,37 +107,37 @@ renderer.shadowMap.enabled = true;
 
 // カメラの設定
 const camera = new THREE.PerspectiveCamera(
-    75,
-    canvasWidth / canvasHeight,
-    0.1,
-    100000
+  75,
+  canvasWidth / canvasHeight,
+  0.1,
+  100000
 );
 camera.position.set(10, 20, 20);
 camera.lookAt(new THREE.Vector3(0, 0, 0));
 
-const orbitControls = new (THREE as any).OrbitControls(camera, canvasElement);
+const orbitControls = new OrbitControls(camera, canvasElement);
 
 let count = 0;
 const update = (): void => {
-    torusGroupList.forEach((element, index) => {
-        element.position.setZ(-125 + ((count + index * 50) % 250));
-        element.children[0].rotateZ(Math.PI * 2 * 0.002);
-        element.children[1].rotateZ(Math.PI * 2 * 0.004);
-        element.children[2].rotateZ(Math.PI * 2 * -0.002);
-    });
-    count += 1;
-    orbitControls.update();
+  torusGroupList.forEach((element, index) => {
+    element.position.setZ(-125 + ((count + index * 50) % 250));
+    element.children[0].rotateZ(Math.PI * 2 * 0.002);
+    element.children[1].rotateZ(Math.PI * 2 * 0.004);
+    element.children[2].rotateZ(Math.PI * 2 * -0.002);
+  });
+  count += 1;
+  orbitControls.update();
 
-    renderer.setSize(
-        canvasElement.clientWidth,
-        canvasElement.clientHeight,
-        false
-    );
+  renderer.setSize(
+    canvasElement.clientWidth,
+    canvasElement.clientHeight,
+    false
+  );
 
-    camera.aspect = canvasElement.clientWidth / canvasElement.clientHeight;
-    camera.updateProjectionMatrix();
-    renderer.render(scene, camera);
+  camera.aspect = canvasElement.clientWidth / canvasElement.clientHeight;
+  camera.updateProjectionMatrix();
+  renderer.render(scene, camera);
 
-    requestAnimationFrame(update);
+  requestAnimationFrame(update);
 };
 update();

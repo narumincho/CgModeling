@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { GUI } from "dat.gui";
-import "three/examples/js/controls/orbitControls";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 /**
  * @author 17FI082 鳴海秀人
@@ -22,61 +22,61 @@ const scene: THREE.Scene = new THREE.Scene();
 scene.add(new THREE.AxesHelper(25));
 
 const shape = (count: number): THREE.Shape => {
-    const shape = new THREE.Shape();
-    const r = 50;
-    shape.moveTo(r, 0);
-    for (let i = 0; i <= count; i++) {
-        const angle = (i * Math.PI * 2) / count;
-        const miniAngle = ((i + 0.5) * Math.PI * 2) / count;
-        shape.quadraticCurveTo(
-            (Math.cos(miniAngle) * r) / 3,
-            (Math.sin(miniAngle) * r) / 3,
-            Math.cos(angle) * r,
-            Math.sin(angle) * r
-        );
-    }
-    return shape;
+  const shape = new THREE.Shape();
+  const r = 50;
+  shape.moveTo(r, 0);
+  for (let i = 0; i <= count; i++) {
+    const angle = (i * Math.PI * 2) / count;
+    const miniAngle = ((i + 0.5) * Math.PI * 2) / count;
+    shape.quadraticCurveTo(
+      (Math.cos(miniAngle) * r) / 3,
+      (Math.sin(miniAngle) * r) / 3,
+      Math.cos(angle) * r,
+      Math.sin(angle) * r
+    );
+  }
+  return shape;
 };
 
 const setting = {
-    depth: 5,
-    bevelThickness: 7,
-    bevelSize: 2,
-    count: 7
+  depth: 5,
+  bevelThickness: 7,
+  bevelSize: 2,
+  count: 7
 };
 
 let extrudeMesh: THREE.Mesh;
 let extrudeLine: THREE.LineSegments;
 const disposeAndSetExtrude = () => {
-    scene.remove(extrudeMesh);
-    scene.remove(extrudeLine);
-    setExtrude();
+  scene.remove(extrudeMesh);
+  scene.remove(extrudeLine);
+  setExtrude();
 };
 
 const setExtrude = (): void => {
-    const geometry = new THREE.ExtrudeGeometry(shape(setting.count), {
-        depth: setting.depth,
-        bevelThickness: setting.bevelThickness,
-        bevelSize: setting.bevelSize
-    });
-    extrudeMesh = new THREE.Mesh(
-        geometry,
-        new THREE.MeshPhongMaterial({
-            color: 0x156289,
-            emissive: 0x072534,
-            side: THREE.DoubleSide,
-            flatShading: true
-        })
-    );
-    extrudeLine = new THREE.LineSegments(
-        geometry,
-        new THREE.LineBasicMaterial({
-            color: 0xffffff,
-            transparent: true,
-            opacity: 0.5
-        })
-    );
-    scene.add(extrudeMesh, extrudeLine);
+  const geometry = new THREE.ExtrudeGeometry(shape(setting.count), {
+    depth: setting.depth,
+    bevelThickness: setting.bevelThickness,
+    bevelSize: setting.bevelSize
+  });
+  extrudeMesh = new THREE.Mesh(
+    geometry,
+    new THREE.MeshPhongMaterial({
+      color: 0x156289,
+      emissive: 0x072534,
+      side: THREE.DoubleSide,
+      flatShading: true
+    })
+  );
+  extrudeLine = new THREE.LineSegments(
+    geometry,
+    new THREE.LineBasicMaterial({
+      color: 0xffffff,
+      transparent: true,
+      opacity: 0.5
+    })
+  );
+  scene.add(extrudeMesh, extrudeLine);
 };
 setExtrude();
 
@@ -88,7 +88,7 @@ gui.add(setting, "bevelThickness", 0, 10).onChange(disposeAndSetExtrude);
 gui.add(setting, "bevelSize", 0, 10).onChange(disposeAndSetExtrude);
 
 const renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer({
-    canvas: canvasElement
+  canvas: canvasElement
 });
 const canvasWidth = canvasElement.clientWidth;
 const canvasHeight = canvasElement.clientHeight;
@@ -97,29 +97,29 @@ renderer.setClearColor(new THREE.Color(0x495ed));
 renderer.shadowMap.enabled = true;
 // カメラの設定
 const camera = new THREE.PerspectiveCamera(
-    75,
-    canvasWidth / canvasHeight,
-    0.1,
-    1000
+  75,
+  canvasWidth / canvasHeight,
+  0.1,
+  1000
 );
 camera.position.set(20, 50, 40);
 camera.lookAt(new THREE.Vector3(0, 0, 0));
 
-const orbitControls = new (THREE as any).OrbitControls(camera, canvasElement);
+const orbitControls = new OrbitControls(camera, canvasElement);
 
 const update = (): void => {
-    orbitControls.update();
+  orbitControls.update();
 
-    renderer.setSize(
-        canvasElement.clientWidth,
-        canvasElement.clientHeight,
-        false
-    );
+  renderer.setSize(
+    canvasElement.clientWidth,
+    canvasElement.clientHeight,
+    false
+  );
 
-    camera.aspect = canvasElement.clientWidth / canvasElement.clientHeight;
-    camera.updateProjectionMatrix();
-    renderer.render(scene, camera);
+  camera.aspect = canvasElement.clientWidth / canvasElement.clientHeight;
+  camera.updateProjectionMatrix();
+  renderer.render(scene, camera);
 
-    requestAnimationFrame(update);
+  requestAnimationFrame(update);
 };
 update();

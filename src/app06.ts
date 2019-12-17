@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import "three/examples/js/controls/orbitControls";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 /**
  * @author 17FI082 鳴海秀人
@@ -21,41 +21,38 @@ const scene: THREE.Scene = new THREE.Scene();
 scene.add(new THREE.AxesHelper(25));
 
 const octahedron = new THREE.Mesh(
-    new THREE.OctahedronGeometry(),
-    new THREE.MeshNormalMaterial()
+  new THREE.OctahedronGeometry(),
+  new THREE.MeshNormalMaterial()
 );
 
 octahedron.scale.copy(new THREE.Vector3(2, 2, 2));
 scene.add(octahedron);
 
 const tetrahedron = new THREE.Mesh(
-    new THREE.TetrahedronGeometry(),
-    new THREE.MeshNormalMaterial()
+  new THREE.TetrahedronGeometry(),
+  new THREE.MeshNormalMaterial()
 );
 tetrahedron.position.copy(new THREE.Vector3(-5, 0, 0));
 tetrahedron.scale.copy(new THREE.Vector3(2, 2, 2));
 scene.add(tetrahedron);
 
 const lathe = new THREE.Mesh(
-    new THREE.LatheGeometry(
-        new Array(10)
-            .fill(0)
-            .map(
-                (_, index): THREE.Vector2 =>
-                    new THREE.Vector2(
-                        2 - Math.atan((index + 1) / 2),
-                        (index - 5) / 2
-                    )
-            )
-    ),
-    new THREE.MeshNormalMaterial({ side: THREE.DoubleSide })
+  new THREE.LatheGeometry(
+    new Array(10)
+      .fill(0)
+      .map(
+        (_, index): THREE.Vector2 =>
+          new THREE.Vector2(2 - Math.atan((index + 1) / 2), (index - 5) / 2)
+      )
+  ),
+  new THREE.MeshNormalMaterial({ side: THREE.DoubleSide })
 );
 lathe.position.copy(new THREE.Vector3(5, 0, 0));
 
 scene.add(lathe);
 
 const renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer({
-    canvas: canvasElement
+  canvas: canvasElement
 });
 
 const canvasWidth = canvasElement.clientWidth;
@@ -66,47 +63,47 @@ renderer.shadowMap.enabled = true;
 
 // カメラの設定
 const camera = new THREE.PerspectiveCamera(
-    75,
-    canvasWidth / canvasHeight,
-    0.1,
-    1000
+  75,
+  canvasWidth / canvasHeight,
+  0.1,
+  1000
 );
 camera.position.copy(new THREE.Vector3(0, 10, 10));
 camera.lookAt(new THREE.Vector3(0, 0, 0));
 
-const orbitControls = new (THREE as any).OrbitControls(camera, canvasElement);
+const orbitControls = new OrbitControls(camera, canvasElement);
 
 const octahedronRotateAxis = new THREE.Vector3(
-    Math.random(),
-    Math.random(),
-    Math.random()
+  Math.random(),
+  Math.random(),
+  Math.random()
 );
 const tetrahedronRotateAxis = new THREE.Vector3(
-    Math.random(),
-    Math.random(),
-    Math.random()
+  Math.random(),
+  Math.random(),
+  Math.random()
 );
 const latheRotateAxis = new THREE.Vector3(
-    Math.random(),
-    Math.random(),
-    Math.random()
+  Math.random(),
+  Math.random(),
+  Math.random()
 );
 
 const update = (): void => {
-    octahedron.rotateOnAxis(octahedronRotateAxis, 0.04);
-    tetrahedron.rotateOnAxis(tetrahedronRotateAxis, 0.04);
-    lathe.rotateOnAxis(latheRotateAxis, 0.04);
+  octahedron.rotateOnAxis(octahedronRotateAxis, 0.04);
+  tetrahedron.rotateOnAxis(tetrahedronRotateAxis, 0.04);
+  lathe.rotateOnAxis(latheRotateAxis, 0.04);
 
-    orbitControls.update();
-    renderer.setSize(
-        canvasElement.clientWidth,
-        canvasElement.clientHeight,
-        false
-    );
+  orbitControls.update();
+  renderer.setSize(
+    canvasElement.clientWidth,
+    canvasElement.clientHeight,
+    false
+  );
 
-    camera.aspect = canvasElement.clientWidth / canvasElement.clientHeight;
-    camera.updateProjectionMatrix();
-    renderer.render(scene, camera);
-    requestAnimationFrame(update);
+  camera.aspect = canvasElement.clientWidth / canvasElement.clientHeight;
+  camera.updateProjectionMatrix();
+  renderer.render(scene, camera);
+  requestAnimationFrame(update);
 };
 update();
